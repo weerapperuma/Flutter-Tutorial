@@ -146,68 +146,88 @@ export const projectVersions = [
     label: 'V3',
     project: 'Current Standard',
     client: 'New Flutter Apps',
-    purpose: 'Industry-grade clean architecture for complex apps with environments, shared design system, auth, analytics, AI, alerts, and operations.',
+    purpose: 'Lightweight clean architecture for apps that need room to grow without creating empty layers too early.',
     structure: `lib/
 |-- main.dart
+|-- app/
+|   |-- config/
+|   |   \`-- app_config.dart
+|   |-- bloc/
+|   |   \`-- app_bloc_observer.dart
+|   |-- presentation/
+|   |   \`-- pages/
+|   |       \`-- app_shell.dart
+|   \`-- routes/
+|       \`-- app_routes.dart
 |-- core/
-|   |-- network/
-|   |   |-- api_client.dart
-|   |   |-- auth_interceptor.dart
-|   |   \`-- error_interceptor.dart
-|   |-- storage/
-|   |   |-- secure_storage.dart
-|   |   \`-- local_storage.dart
-|   |-- error/
-|   |   |-- failures.dart
-|   |   \`-- exceptions.dart
-|   |-- utils/
-|   \`-- constants/
-|-- features/
-    |-- auth/
-    |   |-- data/
-    |   |-- domain/
-    |   \`-- presentation/
-    |-- home/
-    |   |-- data/
-    |   |-- domain/
-    |   \`-- presentation/
-    |-- analytics/
-    |-- operations/
-    |-- alerts/
-    |-- ai/
-    \`-- profile/
-|-- shared/
+|   |-- constants/
+|   |   \`-- app_colors.dart
+|   |-- theme/
+|   |   \`-- app_theme.dart
 |   |-- widgets/
-|   \`-- models/
-\`-- app/
-    |-- app.dart
-    |-- router/
-    |   |-- app_router.dart
-    |   \`-- app_routes.dart
-    |-- theme/
-    |   |-- app_theme.dart
-    |   |-- app_colors.dart
-    |   \`-- app_text_styles.dart
-    \`-- di/
-        |-- injection.dart
-        \`-- injection.config.dart`,
+|   |   |-- app_background.dart
+|   |   |-- app_surface_card.dart
+|   |   |-- control360_nav_bar.dart
+|   |   \`-- dashboard_header.dart
+|   |-- services/
+|   |   \`-- device_id_service.dart
+|   |-- config/
+|   |   |-- env_config.dart
+|   |   \`-- supabase_config.dart
+|   |-- local_db/
+|   |   \`-- local_database.dart
+|   |-- sync/
+|   |   |-- sync_engine.dart
+|   |   |-- sync_cubit.dart
+|   |   \`-- sync_models.dart
+|   |-- utils/
+|   |   \`-- currency_formatter.dart
+|   \`-- README.md
+|-- features/
+    |-- home/
+    |   \`-- presentation/
+    |       |-- pages/
+    |       |   \`-- home_dashboard_page.dart
+    |       \`-- widgets/
+    |           |-- health_score_widget.dart
+    |           \`-- inventory_insights_widget.dart
+    |-- analytics/
+    |   \`-- presentation/
+    |       |-- pages/
+    |       |   \`-- analytics_dashboard_page.dart
+    |       \`-- widgets/
+    |           |-- analytics_kpi_grid.dart
+    |           |-- branch_performance_card.dart
+    |           |-- strategic_insights_card.dart
+    |           \`-- global_status_card.dart
+    |-- ai/
+    |   \`-- presentation/
+    |       |-- pages/
+    |       \`-- widgets/
+    |-- alerts/
+    |   \`-- presentation/
+    |       |-- pages/
+    |       \`-- widgets/
+    \`-- profile/
+        \`-- presentation/
+            |-- pages/
+            \`-- widgets/`,
     layers: [
-      ['main_*', 'Environment bootstrap for dev, staging, and production with different API URLs and feature flags.'],
-      ['app', 'App shell: MaterialApp, router, theme tokens, route constants, and dependency injection setup.'],
-      ['core', 'Reusable technical services: network, storage, error handling, constants, utilities, and interceptors.'],
-      ['shared', 'Design system and shared models used across many features. No business-specific page logic.'],
-      ['features/*/domain', 'Pure Dart entities, repository contracts, and usecases. No JSON, no widgets, no Dio.'],
-      ['features/*/data', 'Remote/local data sources, DTO models, repository implementations, and API-to-domain mapping.'],
-      ['features/*/presentation', 'Pages, feature widgets, Bloc/Cubit, events, states, and screen-specific interactions.']
+      ['app', 'App startup, app shell, app-level config, bloc observer, and routes when routing grows.'],
+      ['core', 'Reusable shared tools, widgets, services, config, local database, sync, theme, constants, and utilities.'],
+      ['features', 'Business areas such as home, analytics, AI, alerts, and profile.'],
+      ['presentation', 'Pages, widgets, Cubit/Bloc, and UI-only feature logic. Home and analytics can start here.'],
+      ['data', 'Add only when a feature needs API, database, models, or repository implementations.'],
+      ['domain', 'Add only when a feature needs entities, repository contracts, or use cases.']
     ],
     mandatoryFolders: [
-      ['app/router', 'Required for go_router setup, route names, guards, and navigation ownership.'],
-      ['app/di', 'Required for GetIt/Injectable registration and environment-specific dependency graphs.'],
-      ['core/network', 'Required for Dio setup, auth refresh, error interceptors, and request standards.'],
-      ['core/error', 'Required for Failure/Exception mapping so UI does not depend on raw API errors.'],
-      ['shared/widgets', 'Required for reusable design system components such as cards, badges, rings, and shimmers.'],
-      ['features/auth', 'Required as a full feature because login, biometrics, token refresh, and tenancy are business flows.'],
-      ['features/*/domain', 'Required to keep business behavior testable and independent from JSON/API details.']
+      ['app/config', 'Required for app-level configuration that belongs to startup rather than reusable core tools.'],
+      ['app/presentation/pages/app_shell.dart', 'Required for the root shell that hosts navigation and page layout.'],
+      ['core/widgets', 'Required for reusable UI primitives used across features. This replaces a separate shared layer.'],
+      ['core/config', 'Required for environment and Supabase configuration.'],
+      ['core/local_db', 'Required when offline storage or local persistence is part of the app.'],
+      ['core/sync', 'Required when the app needs background sync, sync state, or sync models.'],
+      ['features/*/presentation', 'Required for each business feature. Add data/domain later only when the feature needs them.']
     ]
   }
 ];

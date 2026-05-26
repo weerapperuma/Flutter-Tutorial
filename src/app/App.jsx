@@ -338,6 +338,13 @@ function ResponsibilityCard({ title, icon: Icon, items }) {
 }
 
 function StructureTree({ structure }) {
+  const childLabels = {
+    app: 'startup / shell',
+    core: 'reusable tools',
+    features: 'business areas',
+    'main.dart': 'entry'
+  };
+
   const rows = structure.split('\n').map((line) => {
     const prefix = line.match(/^[|`\-\s]*/)?.[0] || '';
     const name = line.replace(/^[|`\-\s]+/, '').trim();
@@ -374,7 +381,9 @@ function StructureTree({ structure }) {
               <Icon className={row.isFolder ? 'text-emerald-300' : 'text-slate-300'} size={16} />
               <span>{row.name}</span>
               {isRoot && <span className="ml-auto rounded-full bg-emerald-300/20 px-3 py-1 text-xs text-emerald-100">root</span>}
-              {isDirectChild && <span className="ml-auto rounded-full bg-white/10 px-2 py-1 text-xs text-emerald-100">lib child</span>}
+              {isDirectChild && childLabels[row.name] && (
+                <span className="ml-auto rounded-full bg-white/10 px-2 py-1 text-xs text-emerald-100">{childLabels[row.name]}</span>
+              )}
             </div>
           );
         })}
