@@ -9,13 +9,14 @@ import {
   Gauge,
   Layers3,
   MonitorSmartphone,
+  PlayCircle,
   Rocket,
   Server,
   ShieldCheck,
   Smartphone,
   Sparkles
 } from 'lucide-react';
-import { completedProjects, projectVersions, technologies } from '../data/architecture.js';
+import { completedProjects, flutterSetupSteps, projectVersions, technologies } from '../data/architecture.js';
 
 const icons = {
   flutter: Smartphone,
@@ -24,6 +25,15 @@ const icons = {
   react: Gauge,
   next: Sparkles
 };
+
+function MiniStat({ label, value }) {
+  return (
+    <div className="mini-stat">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
 
 function TechButton({ tech, active, onClick }) {
   const Icon = icons[tech.id] || Code2;
@@ -36,51 +46,34 @@ function TechButton({ tech, active, onClick }) {
   );
 }
 
-function MiniStat({ label, value }) {
+function InfoList({ title, icon: Icon, items }) {
   return (
-    <div className="mini-stat">
-      <span>{label}</span>
-      <strong>{value}</strong>
+    <div className="info-list">
+      <div className="card-title card-title--small">
+        <div>
+          <span>{title}</span>
+          <h3>{items.length} items</h3>
+        </div>
+        <Icon size={20} />
+      </div>
+      <div className="info-list__items">
+        {items.map(([name, copy]) => (
+          <article key={name}>
+            <CheckCircle2 size={14} />
+            <div>
+              <h4>{name}</h4>
+              <p>{copy}</p>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
 
-function LayerList({ layers }) {
+function ProjectRow({ project, onOpenVersion, compact = false }) {
   return (
-    <div className="layer-list">
-      {layers.map(([title, copy]) => (
-        <article key={title}>
-          <CheckCircle2 size={15} />
-          <div>
-            <h4>{title}</h4>
-            <p>{copy}</p>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
-}
-
-function VersionTabs({ activeVersion, onChange }) {
-  return (
-    <div className="version-tabs">
-      {projectVersions.map((version) => (
-        <button
-          className={activeVersion.id === version.id ? 'is-active' : ''}
-          key={version.id}
-          onClick={() => onChange(version)}
-        >
-          <span>{version.label}</span>
-          {version.project}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function ProjectRow({ project, onOpenVersion }) {
-  return (
-    <button className="project-row" onClick={() => onOpenVersion(project.version)}>
+    <button className={`project-row ${compact ? 'project-row--compact' : ''}`} onClick={() => onOpenVersion(project.version)}>
       <div>
         <strong>{project.name}</strong>
         <span>{project.client}</span>
@@ -91,20 +84,113 @@ function ProjectRow({ project, onOpenVersion }) {
   );
 }
 
-function FlutterWorkspace({ activeVersion, setActiveVersion }) {
-  const setupSteps = ['flutter create app_name', 'add environments', 'build first feature'];
+function VersionCard({ version, active, onClick }) {
+  return (
+    <button className={`version-card ${active ? 'is-active' : ''}`} onClick={onClick}>
+      <span>{version.label}</span>
+      <strong>{version.project}</strong>
+      <small>{version.client}</small>
+    </button>
+  );
+}
+
+function DashboardHome({ activeTechId, setActiveTechId }) {
+  return (
+    <section className="home-dashboard">
+      <div className="hero-card">
+        <span>Start Here</span>
+        <h2>Pick a stack to load its project dashboard.</h2>
+        <p>Flutter opens used projects, setup steps, architecture versions, mandatory folders, and layer responsibility.</p>
+      </div>
+      <div className="overview-grid">
+        {technologies.map((tech) => {
+          const Icon = icons[tech.id] || Code2;
+          return (
+            <button className="overview-card" key={tech.id} onClick={() => setActiveTechId(tech.id)}>
+              <Icon size={22} />
+              <span>{tech.name}</span>
+              <strong>{tech.role}</strong>
+            </button>
+          );
+        })}
+      </div>
+      <div className="home-footer-card">
+        <PlayCircle size={22} />
+        <div>
+          <strong>{activeTechId ? 'Dashboard loaded' : 'No stack selected'}</strong>
+          <span>Use the spread buttons above or the side navigation.</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FlutterWorkspace({ activeVersion, setActiveVersion, onOpenVersion }) {
+  const flutterProjects = completedProjects.filter((project) => project.stack.includes('Flutter'));
 
   return (
-    <section className="workspace-grid">
-      <div className="main-card main-card--structure">
+    <section className="flutter-workspace">
+      <div className="main-card used-projects-card">
         <div className="card-title">
           <div>
-            <span>Flutter Architecture</span>
-            <h2>{activeVersion.label} project structure</h2>
+            <span>Flutter Used Projects</span>
+            <h2>Project examples</h2>
           </div>
-          <FolderTree size={24} />
+          <Smartphone size={22} />
         </div>
-        <VersionTabs activeVersion={activeVersion} onChange={setActiveVersion} />
+        <div className="used-project-grid">
+          {flutterProjects.map((project) => (
+            <ProjectRow compact key={project.name} project={project} onOpenVersion={onOpenVersion} />
+          ))}
+        </div>
+      </div>
+
+      <div className="main-card setup-card">
+        <div className="card-title">
+          <div>
+            <span>First Things After Create</span>
+            <h2>Setup flow</h2>
+          </div>
+          <Rocket size={22} />
+        </div>
+        <div className="setup-flow">
+          {flutterSetupSteps.map(([title, copy]) => (
+            <article key={title}>
+              <span>{title}</span>
+              <strong>{copy}</strong>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="main-card version-picker-card">
+        <div className="card-title">
+          <div>
+            <span>Project Structures</span>
+            <h2>Choose V1, V2, or V3</h2>
+          </div>
+          <Layers3 size={22} />
+        </div>
+        <div className="version-grid">
+          {projectVersions.map((version) => (
+            <VersionCard
+              active={activeVersion.id === version.id}
+              key={version.id}
+              version={version}
+              onClick={() => setActiveVersion(version)}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="main-card structure-card">
+        <div className="card-title">
+          <div>
+            <span>{activeVersion.label} Structure</span>
+            <h2>{activeVersion.project}</h2>
+          </div>
+          <FolderTree size={22} />
+        </div>
         <div className="structure-preview">
           <pre>
             <code>{activeVersion.structure}</code>
@@ -112,21 +198,10 @@ function FlutterWorkspace({ activeVersion, setActiveVersion }) {
         </div>
       </div>
 
-      <div className="main-card">
-        <div className="card-title">
-          <div>
-            <span>Layer Responsibility</span>
-            <h2>{activeVersion.project}</h2>
-          </div>
-          <Layers3 size={24} />
-        </div>
+      <div className="main-card detail-card">
         <p className="quiet">{activeVersion.purpose}</p>
-        <div className="setup-steps">
-          {setupSteps.map((step) => (
-            <span key={step}>{step}</span>
-          ))}
-        </div>
-        <LayerList layers={activeVersion.layers} />
+        <InfoList icon={Layers3} items={activeVersion.layers} title="Layer Responsibility" />
+        <InfoList icon={ShieldCheck} items={activeVersion.mandatoryFolders} title="Mandatory Folders" />
       </div>
     </section>
   );
@@ -134,11 +209,11 @@ function FlutterWorkspace({ activeVersion, setActiveVersion }) {
 
 function TechnologyWorkspace({ tech }) {
   return (
-    <section className="workspace-grid">
-      <div className="main-card">
+    <section className="technology-workspace">
+      <div className="main-card tech-focus-card">
         <div className="card-title">
           <div>
-            <span>Technology Page</span>
+            <span>Technology Dashboard</span>
             <h2>{tech.name}</h2>
           </div>
           <Code2 size={24} />
@@ -154,7 +229,7 @@ function TechnologyWorkspace({ tech }) {
         </div>
       </div>
 
-      <div className="main-card">
+      <div className="main-card stack-card">
         <div className="card-title">
           <div>
             <span>Main Stack</span>
@@ -173,11 +248,11 @@ function TechnologyWorkspace({ tech }) {
 }
 
 export function App() {
-  const [activeTechId, setActiveTechId] = useState('flutter');
+  const [activeTechId, setActiveTechId] = useState(null);
   const [activeVersion, setActiveVersion] = useState(projectVersions[2]);
 
   const activeTech = useMemo(
-    () => technologies.find((technology) => technology.id === activeTechId) || technologies[0],
+    () => technologies.find((technology) => technology.id === activeTechId),
     [activeTechId]
   );
 
@@ -217,12 +292,12 @@ export function App() {
         <header className="dashboard-header">
           <div>
             <span>Developer Dashboard</span>
-            <h1>Mobile stack dashboard.</h1>
+            <h1>{activeTech ? `${activeTech.name} workspace` : 'Mobile stack dashboard'}</h1>
           </div>
           <div className="header-stats">
-            <MiniStat label="Structures" value="V1 / V2 / V3" />
+            <MiniStat label="Stacks" value={technologies.length} />
             <MiniStat label="Projects" value={completedProjects.length} />
-            <MiniStat label="Mode" value="Clean UI" />
+            <MiniStat label="Flutter" value="V1 / V2 / V3" />
           </div>
         </header>
 
@@ -237,8 +312,14 @@ export function App() {
           ))}
         </div>
 
-        {activeTech.id === 'flutter' ? (
-          <FlutterWorkspace activeVersion={activeVersion} setActiveVersion={setActiveVersion} />
+        {!activeTech ? (
+          <DashboardHome activeTechId={activeTechId} setActiveTechId={setActiveTechId} />
+        ) : activeTech.id === 'flutter' ? (
+          <FlutterWorkspace
+            activeVersion={activeVersion}
+            onOpenVersion={openProjectVersion}
+            setActiveVersion={setActiveVersion}
+          />
         ) : (
           <TechnologyWorkspace tech={activeTech} />
         )}
@@ -246,12 +327,12 @@ export function App() {
 
       <aside className="project-panel">
         <div className="panel-card">
-          <div className="card-title">
+          <div className="card-title card-title--small">
             <div>
-              <span>Completed Projects</span>
-              <h2>Open version</h2>
+              <span>Completed</span>
+              <h2>Projects</h2>
             </div>
-            <Database size={22} />
+            <Database size={20} />
           </div>
           <div className="project-list">
             {completedProjects.map((project) => (
@@ -261,12 +342,9 @@ export function App() {
         </div>
 
         <div className="panel-card panel-card--guide">
-          <ShieldCheck size={24} />
-          <h3>Current standard is V3</h3>
-          <p>
-            Use V3 for new apps. V1 fits early service apps, V2 fits POS/offline systems, and V3 fits complex production
-            products.
-          </p>
+          <ShieldCheck size={22} />
+          <h3>V3 for new apps</h3>
+          <p>V1 fits early service apps. V2 fits POS/offline systems. V3 is the current production standard.</p>
         </div>
       </aside>
     </main>

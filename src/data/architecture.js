@@ -83,6 +83,13 @@ export const projectVersions = [
       ['data_layer', 'API calls, local cache, DTO models, and mappers for each feature.'],
       ['domain_layer', 'Business rules, entities, repository contracts, and usecases.'],
       ['presentation_layer', 'Pages, widgets, Bloc/Cubit, states, and user interactions.']
+    ],
+    mandatoryFolders: [
+      ['core/network', 'Required for API client, base options, interceptors, and normalized backend communication.'],
+      ['core/routing', 'Required for central navigation rules and route guards.'],
+      ['core/storage', 'Required for tokens, cached profile data, and persistent app state.'],
+      ['features/*/data_layer', 'Required when a feature talks to API, local DB, or external service.'],
+      ['features/*/presentation_layer', 'Required for pages, widgets, and feature state management.']
     ]
   },
   {
@@ -125,6 +132,13 @@ export const projectVersions = [
       ['feature/domain', 'Pure POS rules: entities, totals, discounts, taxes, receipt validation, and repository contracts.'],
       ['feature/data', 'Database tables, API models, local/remote sources, and sync mapping.'],
       ['feature/presentation', 'Cashier pages, Cubit/Bloc state, dialogs, receipt UI, and payment flows.']
+    ],
+    mandatoryFolders: [
+      ['core/local_db', 'Required because POS must continue working when internet is unavailable.'],
+      ['core/sync', 'Required to push pending receipts, payments, stock updates, and branch changes.'],
+      ['features/auth/domain', 'Required to keep user, branch, and permission rules independent from UI.'],
+      ['features/receipts/data', 'Required for receipt persistence, API payloads, and offline queue mapping.'],
+      ['features/payments', 'Required to isolate tender types, payment validation, and settlement logic.']
     ]
   },
   {
@@ -188,8 +202,26 @@ export const projectVersions = [
       ['features/*/domain', 'Pure Dart entities, repository contracts, and usecases. No JSON, no widgets, no Dio.'],
       ['features/*/data', 'Remote/local data sources, DTO models, repository implementations, and API-to-domain mapping.'],
       ['features/*/presentation', 'Pages, feature widgets, Bloc/Cubit, events, states, and screen-specific interactions.']
+    ],
+    mandatoryFolders: [
+      ['app/router', 'Required for go_router setup, route names, guards, and navigation ownership.'],
+      ['app/di', 'Required for GetIt/Injectable registration and environment-specific dependency graphs.'],
+      ['core/network', 'Required for Dio setup, auth refresh, error interceptors, and request standards.'],
+      ['core/error', 'Required for Failure/Exception mapping so UI does not depend on raw API errors.'],
+      ['shared/widgets', 'Required for reusable design system components such as cards, badges, rings, and shimmers.'],
+      ['features/auth', 'Required as a full feature because login, biometrics, token refresh, and tenancy are business flows.'],
+      ['features/*/domain', 'Required to keep business behavior testable and independent from JSON/API details.']
     ]
   }
+];
+
+export const flutterSetupSteps = [
+  ['Create', 'flutter create app_name'],
+  ['Bootstrap', 'main_dev.dart, main_staging.dart, main_prod.dart'],
+  ['Packages', 'go_router, dio, get_it, injectable, flutter_bloc'],
+  ['Theme', 'colors, typography, spacing, reusable components'],
+  ['First Feature', 'data, domain, presentation, bloc/cubit'],
+  ['Connect API', 'api_client, interceptors, failures, repositories']
 ];
 
 export const completedProjects = [
