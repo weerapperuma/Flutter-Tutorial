@@ -149,18 +149,6 @@ export const projectVersions = [
     purpose: 'Industry-grade clean architecture for complex apps with environments, shared design system, auth, analytics, AI, alerts, and operations.',
     structure: `lib/
 |-- main.dart
-|-- app/
-|   |-- app.dart
-|   |-- router/
-|   |   |-- app_router.dart
-|   |   \`-- app_routes.dart
-|   |-- theme/
-|   |   |-- app_theme.dart
-|   |   |-- app_colors.dart
-|   |   \`-- app_text_styles.dart
-|   \`-- di/
-|       |-- injection.dart
-|       \`-- injection.config.dart
 |-- core/
 |   |-- network/
 |   |   |-- api_client.dart
@@ -174,10 +162,7 @@ export const projectVersions = [
 |   |   \`-- exceptions.dart
 |   |-- utils/
 |   \`-- constants/
-|-- shared/
-|   |-- widgets/
-|   \`-- models/
-\`-- features/
+|-- features/
     |-- auth/
     |   |-- data/
     |   |-- domain/
@@ -190,7 +175,22 @@ export const projectVersions = [
     |-- operations/
     |-- alerts/
     |-- ai/
-    \`-- profile/`,
+    \`-- profile/
+|-- shared/
+|   |-- widgets/
+|   \`-- models/
+\`-- app/
+    |-- app.dart
+    |-- router/
+    |   |-- app_router.dart
+    |   \`-- app_routes.dart
+    |-- theme/
+    |   |-- app_theme.dart
+    |   |-- app_colors.dart
+    |   \`-- app_text_styles.dart
+    \`-- di/
+        |-- injection.dart
+        \`-- injection.config.dart`,
     layers: [
       ['main_*', 'Environment bootstrap for dev, staging, and production with different API URLs and feature flags.'],
       ['app', 'App shell: MaterialApp, router, theme tokens, route constants, and dependency injection setup.'],

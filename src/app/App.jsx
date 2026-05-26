@@ -356,17 +356,25 @@ function StructureTree({ structure }) {
       <div className="grid gap-1">
         {rows.map((row, index) => {
           const Icon = row.isFolder ? Folder : FileText;
+          const isRoot = row.depth === 0;
+          const isDirectChild = row.depth === 1;
 
           return (
             <div
               className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${
-                row.depth === 0 ? 'bg-white/10 font-black text-white' : 'text-emerald-50/95 hover:bg-white/5'
+                isRoot
+                  ? 'mb-2 bg-emerald-400/20 text-base font-black text-white ring-1 ring-emerald-300/30'
+                  : isDirectChild
+                    ? 'mt-1 bg-white/10 font-black text-white'
+                    : 'text-emerald-50/95 hover:bg-white/5'
               }`}
               key={`${row.name}-${index}`}
               style={{ paddingLeft: `${12 + row.depth * 22}px` }}
             >
               <Icon className={row.isFolder ? 'text-emerald-300' : 'text-slate-300'} size={16} />
               <span>{row.name}</span>
+              {isRoot && <span className="ml-auto rounded-full bg-emerald-300/20 px-3 py-1 text-xs text-emerald-100">root</span>}
+              {isDirectChild && <span className="ml-auto rounded-full bg-white/10 px-2 py-1 text-xs text-emerald-100">lib child</span>}
             </div>
           );
         })}
