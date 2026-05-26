@@ -2,6 +2,7 @@ import {
   ArrowRight,
   Blocks,
   Braces,
+  BriefcaseBusiness,
   CheckCircle2,
   Code2,
   Cpu,
@@ -22,7 +23,14 @@ import {
   Workflow,
   Zap
 } from 'lucide-react';
-import { architectureTree, boilerplateFiles, featureLayers, highlights, modules } from '../data/architecture.js';
+import {
+  architectureTree,
+  boilerplateFiles,
+  completedProjects,
+  featureLayers,
+  highlights,
+  modules
+} from '../data/architecture.js';
 
 const iconMap = {
   app: Smartphone,
@@ -102,6 +110,34 @@ function FileBlock({ file }) {
   );
 }
 
+function ProjectCard({ project }) {
+  return (
+    <article className="project-card">
+      <header className="project-card__header">
+        <div>
+          <span>{project.client}</span>
+          <h3>{project.name}</h3>
+        </div>
+        <strong>{project.status}</strong>
+      </header>
+      <p>{project.summary}</p>
+      <div className="project-card__metrics">
+        {project.metrics.map((metric) => (
+          <div key={metric.label}>
+            <span>{metric.label}</span>
+            <strong>{metric.value}</strong>
+          </div>
+        ))}
+      </div>
+      <div className="tech-stack">
+        {project.technologies.map((technology) => (
+          <span key={technology}>{technology}</span>
+        ))}
+      </div>
+    </article>
+  );
+}
+
 export function App() {
   return (
     <main>
@@ -150,6 +186,10 @@ export function App() {
               View structure
               <ArrowRight size={18} />
             </a>
+            <a href="#projects" className="button button--ghost">
+              Completed projects
+              <BriefcaseBusiness size={18} />
+            </a>
             <a href="#boilerplate" className="button button--ghost">
               See boilerplate
               <TerminalSquare size={18} />
@@ -182,6 +222,34 @@ export function App() {
           <div className="module-grid">
             {modules.map((module) => (
               <ModuleCard key={module.name} module={module} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--projects" id="projects">
+        <div className="section__heading">
+          <span>Completed Projects</span>
+          <h2>Delivered mobile and web systems with dashboard-grade UI.</h2>
+        </div>
+        <div className="projects-dashboard">
+          <div className="dashboard-summary">
+            <div>
+              <span>Total Projects</span>
+              <strong>{completedProjects.length}</strong>
+            </div>
+            <div>
+              <span>Main Stack</span>
+              <strong>Flutter / React</strong>
+            </div>
+            <div>
+              <span>Delivery</span>
+              <strong>Responsive UI</strong>
+            </div>
+          </div>
+          <div className="project-grid">
+            {completedProjects.map((project) => (
+              <ProjectCard project={project} key={project.name} />
             ))}
           </div>
         </div>

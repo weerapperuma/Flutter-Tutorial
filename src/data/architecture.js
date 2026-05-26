@@ -133,6 +133,45 @@ export const highlights = [
   }
 ];
 
+export const completedProjects = [
+  {
+    name: 'Salesman Pro',
+    client: 'Tharindu Farms',
+    status: 'Completed',
+    summary: 'Field sales mobile app with customer routes, order capture, invoice summaries, and manager-ready daily reports.',
+    metrics: [
+      { label: 'Platform', value: 'Mobile' },
+      { label: 'Modules', value: '8' },
+      { label: 'UI', value: 'Dashboard' }
+    ],
+    technologies: ['Flutter', 'Kotlin', 'Firebase', 'REST API']
+  },
+  {
+    name: 'Service Station Management System',
+    client: 'Auto Service Operations',
+    status: 'Completed',
+    summary: 'Responsive admin dashboard for jobs, vehicle service history, billing, inventory, technicians, and daily revenue.',
+    metrics: [
+      { label: 'Platform', value: 'Web' },
+      { label: 'Modules', value: '10' },
+      { label: 'Reports', value: 'Live' }
+    ],
+    technologies: ['Next.js', 'React', 'Node.js', 'MySQL']
+  },
+  {
+    name: 'Business Health Dashboard',
+    client: 'Multi Business CEO View',
+    status: 'Completed',
+    summary: 'Executive KPI dashboard with health score, alerts, revenue snapshots, AI digest, and branch-level performance.',
+    metrics: [
+      { label: 'Platform', value: 'Web + App' },
+      { label: 'Score', value: '0-100' },
+      { label: 'Alerts', value: 'Smart' }
+    ],
+    technologies: ['Flutter', 'React', 'Next.js', 'Dio']
+  }
+];
+
 export const boilerplateFiles = [
   {
     path: 'features/home/domain/entities/business_summary.dart',
