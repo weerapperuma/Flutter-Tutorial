@@ -293,7 +293,7 @@ function FlutterPage({ activeVersion, setActiveVersion, onBack }) {
               </div>
               <FolderTree size={26} />
             </div>
-            <pre className="max-h-[680px] overflow-auto rounded-2xl bg-black/30 p-5 text-sm leading-6 text-emerald-50">
+            <pre className="whitespace-pre-wrap rounded-2xl bg-black/30 p-5 text-sm leading-6 text-emerald-50">
               <code>{activeVersion.structure}</code>
             </pre>
           </article>
