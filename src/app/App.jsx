@@ -1,15 +1,13 @@
 import { useMemo, useState } from 'react';
 import {
+  ArrowLeft,
   Boxes,
   CheckCircle2,
-  ChevronRight,
   Code2,
-  Database,
   FolderTree,
   Gauge,
   Layers3,
   MonitorSmartphone,
-  PlayCircle,
   Rocket,
   Server,
   ShieldCheck,
@@ -26,327 +24,373 @@ const icons = {
   next: Sparkles
 };
 
-function MiniStat({ label, value }) {
-  return (
-    <div className="mini-stat">
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function TechButton({ tech, active, onClick }) {
+function TechOrb({ tech, active, onClick }) {
   const Icon = icons[tech.id] || Code2;
 
   return (
-    <button className={`tech-button tech-button--${tech.id} ${active ? 'is-active' : ''}`} onClick={onClick}>
+    <button
+      className={`absolute inline-flex items-center gap-2 rounded-2xl border px-4 py-3 text-sm font-black shadow-sm transition hover:-translate-y-1 hover:bg-slate-950 hover:text-white ${
+        active ? 'border-slate-950 bg-slate-950 text-white' : 'border-slate-200 bg-white/90 text-slate-800'
+      } tech-orb-${tech.id}`}
+      onClick={onClick}
+    >
       <Icon size={18} />
-      <span>{tech.name}</span>
+      {tech.name}
     </button>
   );
 }
 
-function InfoList({ title, icon: Icon, items }) {
+function DashboardHome({ onSelectTech, selectedTech }) {
   return (
-    <div className="info-list">
-      <div className="card-title card-title--small">
-        <div>
-          <span>{title}</span>
-          <h3>{items.length} items</h3>
-        </div>
-        <Icon size={20} />
-      </div>
-      <div className="info-list__items">
-        {items.map(([name, copy]) => (
-          <article key={name}>
-            <CheckCircle2 size={14} />
+    <main className="h-dvh overflow-hidden bg-[#edf3ef] p-4 text-slate-950">
+      <section className="grid h-full grid-cols-[220px_minmax(0,1fr)_260px] gap-4 max-[1050px]:grid-cols-[88px_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:overflow-auto">
+        <aside className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm max-[760px]:flex max-[760px]:items-center max-[760px]:gap-4">
+          <div className="mb-5 flex items-center gap-3 border-b border-slate-100 pb-4 max-[760px]:mb-0 max-[760px]:border-b-0 max-[760px]:pb-0">
+            <div className="grid size-10 place-items-center rounded-xl bg-emerald-700 font-black text-white">MC</div>
+            <strong className="truncate max-[1050px]:hidden max-[760px]:block">Mobile Craft</strong>
+          </div>
+          <nav className="grid gap-2 max-[760px]:flex max-[760px]:overflow-x-auto">
+            {technologies.map((tech) => {
+              const Icon = icons[tech.id] || Code2;
+              return (
+                <button
+                  className={`flex min-h-11 items-center gap-3 rounded-xl px-3 text-left font-extrabold transition hover:bg-slate-950 hover:text-white max-[1050px]:justify-center max-[760px]:min-w-max ${
+                    selectedTech === tech.id ? 'bg-slate-950 text-white' : 'text-slate-700'
+                  }`}
+                  key={tech.id}
+                  onClick={() => onSelectTech(tech.id)}
+                >
+                  <Icon size={18} />
+                  <span className="max-[1050px]:hidden max-[760px]:block">{tech.name}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        <section className="grid min-h-0 grid-rows-[96px_1fr] gap-4 max-[760px]:grid-rows-none">
+          <header className="grid grid-cols-[minmax(0,1fr)_320px] items-center gap-4 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm max-[900px]:grid-cols-1">
             <div>
-              <h4>{name}</h4>
-              <p>{copy}</p>
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Developer Dashboard</span>
+              <h1 className="mt-1 text-3xl font-black leading-none tracking-normal max-[760px]:text-3xl">
+                Stack launcher for real project architecture.
+              </h1>
             </div>
-          </article>
-        ))}
-      </div>
+            <div className="grid grid-cols-3 gap-2">
+              <Stat label="Stacks" value={technologies.length} />
+              <Stat label="Projects" value={completedProjects.length} />
+              <Stat label="Flutter" value="V1-V3" />
+            </div>
+          </header>
+
+          <div className="relative min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm max-[760px]:min-h-[560px]">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.05)_1px,transparent_1px)] bg-[size:72px_72px]" />
+            {technologies.map((tech) => (
+              <TechOrb
+                active={selectedTech === tech.id}
+                key={tech.id}
+                tech={tech}
+                onClick={() => onSelectTech(tech.id)}
+              />
+            ))}
+            <div className="relative z-10 grid h-full grid-cols-[minmax(240px,0.65fr)_minmax(0,1.35fr)] gap-4 pt-20 max-[900px]:grid-cols-1">
+              <div className="rounded-2xl border border-slate-200 bg-white/90 p-7 shadow-sm">
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Start Here</span>
+                <h2 className="mt-3 text-4xl font-black leading-none tracking-normal max-[760px]:text-4xl">
+                  Click a stack to open its page.
+                </h2>
+                <p className="mt-5 max-w-md text-slate-600">
+                  The dashboard stays simple. The selected stack opens as a clean scrollable web page with its own structure,
+                  projects, and responsibilities.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 max-[620px]:grid-cols-1">
+                {technologies.map((tech) => {
+                  const Icon = icons[tech.id] || Code2;
+                  return (
+                    <button
+                      className="group rounded-2xl border border-slate-200 bg-white/90 p-4 text-left shadow-sm transition hover:-translate-y-1 hover:bg-slate-950 hover:text-white"
+                      key={tech.id}
+                      onClick={() => onSelectTech(tech.id)}
+                    >
+                      <Icon className="mb-5 text-emerald-700 group-hover:text-white" size={24} />
+                      <span className="text-xs font-black uppercase tracking-wider text-emerald-700 group-hover:text-white">
+                        {tech.name}
+                      </span>
+                      <strong className="mt-2 block text-base">{tech.role}</strong>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside className="grid gap-4 max-[1050px]:col-span-2 max-[760px]:col-span-1">
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Completed</span>
+                <h2 className="text-2xl font-black leading-none">Projects</h2>
+              </div>
+              <Boxes size={22} />
+            </div>
+            <div className="grid gap-2">
+              {completedProjects.map((project) => (
+                <button
+                  className="flex min-w-0 items-center justify-between gap-2 rounded-xl bg-slate-50 p-3 text-left transition hover:bg-emerald-50"
+                  key={project.name}
+                  onClick={() => onSelectTech(project.stack.includes('Flutter') ? 'flutter' : 'react')}
+                >
+                  <div className="min-w-0">
+                    <strong className="block truncate text-sm">{project.name}</strong>
+                    <span className="block truncate text-xs text-slate-500">{project.client}</span>
+                  </div>
+                  <small className="shrink-0 rounded-full bg-emerald-100 px-2 py-1 text-xs font-black text-emerald-700">
+                    {project.version.toUpperCase()}
+                  </small>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-2xl bg-slate-950 p-5 text-white shadow-sm">
+            <ShieldCheck size={24} />
+            <h3 className="mt-5 text-lg font-black leading-tight">Flutter V3 is current standard</h3>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              V1 fits early service apps. V2 fits POS/offline apps. V3 is best for new production work.
+            </p>
+          </div>
+        </aside>
+      </section>
+    </main>
+  );
+}
+
+function Stat({ label, value }) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-3">
+      <span className="text-xs font-black uppercase tracking-wider text-emerald-700">{label}</span>
+      <strong className="mt-1 block text-lg font-black">{value}</strong>
     </div>
   );
 }
 
-function ProjectRow({ project, onOpenVersion, compact = false }) {
-  return (
-    <button className={`project-row ${compact ? 'project-row--compact' : ''}`} onClick={() => onOpenVersion(project.version)}>
-      <div>
-        <strong>{project.name}</strong>
-        <span>{project.client}</span>
-      </div>
-      <small>{project.version.toUpperCase()}</small>
-      <ChevronRight size={16} />
-    </button>
-  );
-}
+function PageHeader({ tech, onBack }) {
+  const Icon = icons[tech.id] || Code2;
 
-function VersionCard({ version, active, onClick }) {
   return (
-    <button className={`version-card ${active ? 'is-active' : ''}`} onClick={onClick}>
-      <span>{version.label}</span>
-      <strong>{version.project}</strong>
-      <small>{version.client}</small>
-    </button>
-  );
-}
-
-function DashboardHome({ activeTechId, setActiveTechId }) {
-  return (
-    <section className="home-dashboard">
-      <div className="hero-card">
-        <span>Start Here</span>
-        <h2>Pick a stack to load its project dashboard.</h2>
-        <p>Flutter opens used projects, setup steps, architecture versions, mandatory folders, and layer responsibility.</p>
-      </div>
-      <div className="overview-grid">
-        {technologies.map((tech) => {
-          const Icon = icons[tech.id] || Code2;
-          return (
-            <button className="overview-card" key={tech.id} onClick={() => setActiveTechId(tech.id)}>
-              <Icon size={22} />
-              <span>{tech.name}</span>
-              <strong>{tech.role}</strong>
-            </button>
-          );
-        })}
-      </div>
-      <div className="home-footer-card">
-        <PlayCircle size={22} />
-        <div>
-          <strong>{activeTechId ? 'Dashboard loaded' : 'No stack selected'}</strong>
-          <span>Use the spread buttons above or the side navigation.</span>
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-[#edf3ef]/90 px-6 py-4 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+        <button className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 font-black shadow-sm" onClick={onBack}>
+          <ArrowLeft size={18} />
+          Dashboard
+        </button>
+        <div className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm">
+          <Icon className="text-emerald-700" size={20} />
+          <strong>{tech.name}</strong>
         </div>
       </div>
-    </section>
+    </header>
   );
 }
 
-function FlutterWorkspace({ activeVersion, setActiveVersion, onOpenVersion }) {
+function FlutterPage({ activeVersion, setActiveVersion, onBack }) {
+  const flutterTech = technologies.find((tech) => tech.id === 'flutter');
   const flutterProjects = completedProjects.filter((project) => project.stack.includes('Flutter'));
 
   return (
-    <section className="flutter-workspace">
-      <div className="main-card used-projects-card">
-        <div className="card-title">
-          <div>
-            <span>Flutter Used Projects</span>
-            <h2>Project examples</h2>
+    <main className="min-h-dvh bg-[#edf3ef] text-slate-950">
+      <PageHeader tech={flutterTech} onBack={onBack} />
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <div className="grid grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] gap-6 max-[940px]:grid-cols-1">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Flutter Workspace</span>
+            <h1 className="mt-4 max-w-3xl text-6xl font-black leading-none tracking-normal max-[760px]:text-4xl">
+              Create project, choose structure, build clean layers.
+            </h1>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+              This page documents how our Flutter apps are started, which real projects use each structure version, and what
+              each mandatory folder is responsible for.
+            </p>
           </div>
-          <Smartphone size={22} />
+          <div className="grid gap-3">
+            {flutterProjects.map((project) => (
+              <button
+                className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300"
+                key={project.name}
+                onClick={() => {
+                  const version = projectVersions.find((item) => item.id === project.version);
+                  if (version) setActiveVersion(version);
+                }}
+              >
+                <div>
+                  <span className="text-xs font-black uppercase tracking-wider text-emerald-700">{project.client}</span>
+                  <strong className="mt-1 block text-xl">{project.name}</strong>
+                </div>
+                <small className="rounded-full bg-emerald-100 px-3 py-2 text-sm font-black text-emerald-700">
+                  {project.version.toUpperCase()}
+                </small>
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="used-project-grid">
-          {flutterProjects.map((project) => (
-            <ProjectRow compact key={project.name} project={project} onOpenVersion={onOpenVersion} />
-          ))}
-        </div>
-      </div>
 
-      <div className="main-card setup-card">
-        <div className="card-title">
-          <div>
-            <span>First Things After Create</span>
-            <h2>Setup flow</h2>
+        <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-700">First Things After Create</span>
+              <h2 className="text-3xl font-black tracking-normal">Project setup flow</h2>
+            </div>
+            <Rocket className="text-emerald-700" size={26} />
           </div>
-          <Rocket size={22} />
-        </div>
-        <div className="setup-flow">
-          {flutterSetupSteps.map(([title, copy]) => (
-            <article key={title}>
-              <span>{title}</span>
-              <strong>{copy}</strong>
+          <div className="grid grid-cols-3 gap-3 max-[840px]:grid-cols-2 max-[560px]:grid-cols-1">
+            {flutterSetupSteps.map(([title, copy], index) => (
+              <article className="rounded-2xl bg-slate-50 p-4" key={title}>
+                <span className="text-xs font-black text-emerald-700">0{index + 1}</span>
+                <h3 className="mt-3 text-lg font-black">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{copy}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Project Structures</span>
+              <h2 className="text-3xl font-black tracking-normal">Select version</h2>
+            </div>
+            <Layers3 className="text-emerald-700" size={26} />
+          </div>
+          <div className="grid grid-cols-3 gap-3 max-[760px]:grid-cols-1">
+            {projectVersions.map((version) => (
+              <button
+                className={`rounded-2xl border p-5 text-left transition hover:-translate-y-1 ${
+                  activeVersion.id === version.id
+                    ? 'border-emerald-700 bg-emerald-700 text-white'
+                    : 'border-slate-200 bg-slate-50'
+                }`}
+                key={version.id}
+                onClick={() => setActiveVersion(version)}
+              >
+                <span className={`text-sm font-black ${activeVersion.id === version.id ? 'text-white' : 'text-emerald-700'}`}>
+                  {version.label}
+                </span>
+                <strong className="mt-3 block text-2xl">{version.project}</strong>
+                <small className={activeVersion.id === version.id ? 'text-emerald-50' : 'text-slate-500'}>{version.client}</small>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-6 grid grid-cols-[minmax(0,0.92fr)_minmax(360px,1.08fr)] gap-6 max-[980px]:grid-cols-1">
+          <article className="rounded-3xl border border-slate-200 bg-slate-950 p-6 text-white shadow-sm">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-black uppercase tracking-wider text-emerald-300">{activeVersion.label} Structure</span>
+                <h2 className="text-3xl font-black tracking-normal">{activeVersion.project}</h2>
+              </div>
+              <FolderTree size={26} />
+            </div>
+            <pre className="max-h-[680px] overflow-auto rounded-2xl bg-black/30 p-5 text-sm leading-6 text-emerald-50">
+              <code>{activeVersion.structure}</code>
+            </pre>
+          </article>
+
+          <div className="grid gap-6">
+            <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Why This Version</span>
+              <p className="mt-3 text-lg leading-8 text-slate-600">{activeVersion.purpose}</p>
             </article>
-          ))}
-        </div>
-      </div>
-
-      <div className="main-card version-picker-card">
-        <div className="card-title">
-          <div>
-            <span>Project Structures</span>
-            <h2>Choose V1, V2, or V3</h2>
+            <ResponsibilityCard icon={Layers3} items={activeVersion.layers} title="Layer Responsibility" />
+            <ResponsibilityCard icon={ShieldCheck} items={activeVersion.mandatoryFolders} title="Mandatory Folders" />
           </div>
-          <Layers3 size={22} />
-        </div>
-        <div className="version-grid">
-          {projectVersions.map((version) => (
-            <VersionCard
-              active={activeVersion.id === version.id}
-              key={version.id}
-              version={version}
-              onClick={() => setActiveVersion(version)}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="main-card structure-card">
-        <div className="card-title">
-          <div>
-            <span>{activeVersion.label} Structure</span>
-            <h2>{activeVersion.project}</h2>
-          </div>
-          <FolderTree size={22} />
-        </div>
-        <div className="structure-preview">
-          <pre>
-            <code>{activeVersion.structure}</code>
-          </pre>
-        </div>
-      </div>
-
-      <div className="main-card detail-card">
-        <p className="quiet">{activeVersion.purpose}</p>
-        <InfoList icon={Layers3} items={activeVersion.layers} title="Layer Responsibility" />
-        <InfoList icon={ShieldCheck} items={activeVersion.mandatoryFolders} title="Mandatory Folders" />
-      </div>
-    </section>
+        </section>
+      </section>
+    </main>
   );
 }
 
-function TechnologyWorkspace({ tech }) {
+function ResponsibilityCard({ title, icon: Icon, items }) {
   return (
-    <section className="technology-workspace">
-      <div className="main-card tech-focus-card">
-        <div className="card-title">
-          <div>
-            <span>Technology Dashboard</span>
-            <h2>{tech.name}</h2>
-          </div>
-          <Code2 size={24} />
+    <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <span className="text-xs font-black uppercase tracking-wider text-emerald-700">{title}</span>
+          <h2 className="text-2xl font-black tracking-normal">{items.length} responsibilities</h2>
         </div>
-        <p className="quiet">{tech.summary}</p>
-        <div className="action-grid">
-          {tech.actions.map((action) => (
-            <button key={action}>
-              <Rocket size={16} />
-              {action}
-            </button>
-          ))}
-        </div>
+        <Icon className="text-emerald-700" size={24} />
       </div>
+      <div className="grid gap-3">
+        {items.map(([name, copy]) => (
+          <div className="grid grid-cols-[auto_1fr] gap-3 rounded-2xl bg-slate-50 p-4" key={name}>
+            <CheckCircle2 className="mt-1 text-emerald-700" size={18} />
+            <div>
+              <h3 className="font-black">{name}</h3>
+              <p className="mt-1 text-sm leading-6 text-slate-600">{copy}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
 
-      <div className="main-card stack-card">
-        <div className="card-title">
-          <div>
-            <span>Main Stack</span>
-            <h2>{tech.role}</h2>
-          </div>
-          <Boxes size={24} />
+function GenericTechPage({ tech, onBack }) {
+  const Icon = icons[tech.id] || Code2;
+
+  return (
+    <main className="min-h-dvh bg-[#edf3ef] text-slate-950">
+      <PageHeader tech={tech} onBack={onBack} />
+      <section className="mx-auto max-w-6xl px-6 py-8">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <Icon className="text-emerald-700" size={34} />
+          <span className="mt-8 block text-xs font-black uppercase tracking-wider text-emerald-700">Technology Page</span>
+          <h1 className="mt-3 text-6xl font-black leading-none tracking-normal max-[760px]:text-4xl">{tech.name}</h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">{tech.summary}</p>
         </div>
-        <div className="stack-list">
-          {tech.stack.map((item) => (
-            <span key={item}>{item}</span>
-          ))}
+        <div className="mt-6 grid grid-cols-2 gap-6 max-[760px]:grid-cols-1">
+          <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Main Stack</span>
+            <h2 className="mt-2 text-3xl font-black">{tech.role}</h2>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {tech.stack.map((item) => (
+                <span className="rounded-full bg-emerald-100 px-4 py-2 text-sm font-black text-emerald-700" key={item}>
+                  {item}
+                </span>
+              ))}
+            </div>
+          </article>
+          <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Actions</span>
+            <div className="mt-5 grid gap-3">
+              {tech.actions.map((action) => (
+                <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4 font-black" key={action}>
+                  <Rocket className="text-emerald-700" size={18} />
+                  {action}
+                </div>
+              ))}
+            </div>
+          </article>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }
 
 export function App() {
   const [activeTechId, setActiveTechId] = useState(null);
   const [activeVersion, setActiveVersion] = useState(projectVersions[2]);
+  const activeTech = useMemo(() => technologies.find((tech) => tech.id === activeTechId), [activeTechId]);
 
-  const activeTech = useMemo(
-    () => technologies.find((technology) => technology.id === activeTechId),
-    [activeTechId]
-  );
+  if (activeTech?.id === 'flutter') {
+    return <FlutterPage activeVersion={activeVersion} onBack={() => setActiveTechId(null)} setActiveVersion={setActiveVersion} />;
+  }
 
-  const openProjectVersion = (versionId) => {
-    const version = projectVersions.find((item) => item.id === versionId);
-    setActiveTechId('flutter');
-    if (version) {
-      setActiveVersion(version);
-    }
-  };
+  if (activeTech) {
+    return <GenericTechPage tech={activeTech} onBack={() => setActiveTechId(null)} />;
+  }
 
-  return (
-    <main className="dashboard-shell">
-      <aside className="side-nav">
-        <div className="brand">
-          <div>MC</div>
-          <span>Mobile Craft</span>
-        </div>
-        <nav>
-          {technologies.map((tech) => {
-            const Icon = icons[tech.id] || Code2;
-            return (
-              <button
-                className={activeTechId === tech.id ? 'is-active' : ''}
-                key={tech.id}
-                onClick={() => setActiveTechId(tech.id)}
-              >
-                <Icon size={18} />
-                {tech.name}
-              </button>
-            );
-          })}
-        </nav>
-      </aside>
-
-      <section className="dashboard">
-        <header className="dashboard-header">
-          <div>
-            <span>Developer Dashboard</span>
-            <h1>{activeTech ? `${activeTech.name} workspace` : 'Mobile stack dashboard'}</h1>
-          </div>
-          <div className="header-stats">
-            <MiniStat label="Stacks" value={technologies.length} />
-            <MiniStat label="Projects" value={completedProjects.length} />
-            <MiniStat label="Flutter" value="V1 / V2 / V3" />
-          </div>
-        </header>
-
-        <div className="tech-cloud" aria-label="Technology shortcuts">
-          {technologies.map((tech) => (
-            <TechButton
-              active={activeTechId === tech.id}
-              key={tech.id}
-              tech={tech}
-              onClick={() => setActiveTechId(tech.id)}
-            />
-          ))}
-        </div>
-
-        {!activeTech ? (
-          <DashboardHome activeTechId={activeTechId} setActiveTechId={setActiveTechId} />
-        ) : activeTech.id === 'flutter' ? (
-          <FlutterWorkspace
-            activeVersion={activeVersion}
-            onOpenVersion={openProjectVersion}
-            setActiveVersion={setActiveVersion}
-          />
-        ) : (
-          <TechnologyWorkspace tech={activeTech} />
-        )}
-      </section>
-
-      <aside className="project-panel">
-        <div className="panel-card">
-          <div className="card-title card-title--small">
-            <div>
-              <span>Completed</span>
-              <h2>Projects</h2>
-            </div>
-            <Database size={20} />
-          </div>
-          <div className="project-list">
-            {completedProjects.map((project) => (
-              <ProjectRow key={project.name} project={project} onOpenVersion={openProjectVersion} />
-            ))}
-          </div>
-        </div>
-
-        <div className="panel-card panel-card--guide">
-          <ShieldCheck size={22} />
-          <h3>V3 for new apps</h3>
-          <p>V1 fits early service apps. V2 fits POS/offline systems. V3 is the current production standard.</p>
-        </div>
-      </aside>
-    </main>
-  );
+  return <DashboardHome onSelectTech={setActiveTechId} selectedTech={activeTechId} />;
 }
