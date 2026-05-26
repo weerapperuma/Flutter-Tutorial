@@ -149,9 +149,6 @@ export const projectVersions = [
     purpose: 'Industry-grade clean architecture for complex apps with environments, shared design system, auth, analytics, AI, alerts, and operations.',
     structure: `lib/
 |-- main.dart
-|-- main_dev.dart
-|-- main_staging.dart
-|-- main_prod.dart
 |-- app/
 |   |-- app.dart
 |   |-- router/
@@ -217,7 +214,7 @@ export const projectVersions = [
 
 export const flutterSetupSteps = [
   ['Create', 'flutter create app_name'],
-  ['Bootstrap', 'main_dev.dart, main_staging.dart, main_prod.dart'],
+  ['Bootstrap', 'main.dart with selected environment config'],
   ['Packages', 'go_router, dio, get_it, injectable, flutter_bloc'],
   ['Theme', 'colors, typography, spacing, reusable components'],
   ['First Feature', 'data, domain, presentation, bloc/cubit'],

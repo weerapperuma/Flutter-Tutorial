@@ -4,6 +4,8 @@ import {
   Boxes,
   CheckCircle2,
   Code2,
+  FileText,
+  Folder,
   FolderTree,
   Gauge,
   Layers3,
@@ -293,9 +295,7 @@ function FlutterPage({ activeVersion, setActiveVersion, onBack }) {
               </div>
               <FolderTree size={26} />
             </div>
-            <pre className="whitespace-pre-wrap rounded-2xl bg-black/30 p-5 text-sm leading-6 text-emerald-50">
-              <code>{activeVersion.structure}</code>
-            </pre>
+            <StructureTree structure={activeVersion.structure} />
           </article>
 
           <div className="grid gap-6">
@@ -334,6 +334,44 @@ function ResponsibilityCard({ title, icon: Icon, items }) {
         ))}
       </div>
     </article>
+  );
+}
+
+function StructureTree({ structure }) {
+  const rows = structure.split('\n').map((line) => {
+    const prefix = line.match(/^[|`\-\s]*/)?.[0] || '';
+    const name = line.replace(/^[|`\-\s]+/, '').trim();
+    const depth = Math.max(0, Math.floor(prefix.length / 4));
+    const isFolder = name.endsWith('/');
+
+    return {
+      depth,
+      isFolder,
+      name: name.replace(/\/$/, '')
+    };
+  });
+
+  return (
+    <div className="rounded-2xl bg-black/30 p-4">
+      <div className="grid gap-1">
+        {rows.map((row, index) => {
+          const Icon = row.isFolder ? Folder : FileText;
+
+          return (
+            <div
+              className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm ${
+                row.depth === 0 ? 'bg-white/10 font-black text-white' : 'text-emerald-50/95 hover:bg-white/5'
+              }`}
+              key={`${row.name}-${index}`}
+              style={{ paddingLeft: `${12 + row.depth * 22}px` }}
+            >
+              <Icon className={row.isFolder ? 'text-emerald-300' : 'text-slate-300'} size={16} />
+              <span>{row.name}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
