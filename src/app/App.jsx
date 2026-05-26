@@ -1,299 +1,274 @@
+import { useMemo, useState } from 'react';
 import {
-  ArrowRight,
-  Blocks,
-  Braces,
-  BriefcaseBusiness,
+  Boxes,
   CheckCircle2,
+  ChevronRight,
   Code2,
-  Cpu,
   Database,
-  Fingerprint,
   FolderTree,
-  GitBranch,
+  Gauge,
   Layers3,
-  LockKeyhole,
-  Network,
-  PackageCheck,
-  Palette,
-  Route,
+  MonitorSmartphone,
+  Rocket,
+  Server,
   ShieldCheck,
   Smartphone,
-  Sparkles,
-  TerminalSquare,
-  Workflow,
-  Zap
+  Sparkles
 } from 'lucide-react';
-import {
-  architectureTree,
-  boilerplateFiles,
-  completedProjects,
-  featureLayers,
-  highlights,
-  modules
-} from '../data/architecture.js';
+import { completedProjects, projectVersions, technologies } from '../data/architecture.js';
 
-const iconMap = {
-  app: Smartphone,
-  router: Route,
-  theme: Palette,
-  di: GitBranch,
-  network: Network,
-  storage: LockKeyhole,
-  error: ShieldCheck,
-  utils: Cpu,
-  shared: Blocks,
-  auth: Fingerprint,
-  home: Database,
-  analytics: Sparkles,
-  operations: Workflow,
-  alerts: Zap,
-  ai: Braces,
-  profile: PackageCheck
+const icons = {
+  flutter: Smartphone,
+  kotlin: MonitorSmartphone,
+  express: Server,
+  react: Gauge,
+  next: Sparkles
 };
 
-function Stat({ value, label }) {
+function TechButton({ tech, active, onClick }) {
+  const Icon = icons[tech.id] || Code2;
+
   return (
-    <div className="stat">
-      <strong>{value}</strong>
+    <button className={`tech-button tech-button--${tech.id} ${active ? 'is-active' : ''}`} onClick={onClick}>
+      <Icon size={18} />
+      <span>{tech.name}</span>
+    </button>
+  );
+}
+
+function MiniStat({ label, value }) {
+  return (
+    <div className="mini-stat">
       <span>{label}</span>
+      <strong>{value}</strong>
     </div>
   );
 }
 
-function ModuleCard({ module }) {
-  const Icon = iconMap[module.key] || FolderTree;
-
+function LayerList({ layers }) {
   return (
-    <article className="module-card">
-      <div className="module-card__icon">
-        <Icon size={22} />
-      </div>
-      <div>
-        <h3>{module.name}</h3>
-        <p>{module.description}</p>
-      </div>
-      <ul>
-        {module.items.map((item) => (
-          <li key={item}>
-            <CheckCircle2 size={16} />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </article>
-  );
-}
-
-function LayerRow({ layer }) {
-  return (
-    <div className="layer-row">
-      <div>
-        <span>{layer.badge}</span>
-        <h3>{layer.title}</h3>
-      </div>
-      <p>{layer.copy}</p>
-    </div>
-  );
-}
-
-function FileBlock({ file }) {
-  return (
-    <article className="file-block">
-      <header>
-        <span>{file.path}</span>
-        <Code2 size={18} />
-      </header>
-      <pre>
-        <code>{file.code}</code>
-      </pre>
-    </article>
-  );
-}
-
-function ProjectCard({ project }) {
-  return (
-    <article className="project-card">
-      <header className="project-card__header">
-        <div>
-          <span>{project.client}</span>
-          <h3>{project.name}</h3>
-        </div>
-        <strong>{project.status}</strong>
-      </header>
-      <p>{project.summary}</p>
-      <div className="project-card__metrics">
-        {project.metrics.map((metric) => (
-          <div key={metric.label}>
-            <span>{metric.label}</span>
-            <strong>{metric.value}</strong>
+    <div className="layer-list">
+      {layers.map(([title, copy]) => (
+        <article key={title}>
+          <CheckCircle2 size={15} />
+          <div>
+            <h4>{title}</h4>
+            <p>{copy}</p>
           </div>
-        ))}
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function VersionTabs({ activeVersion, onChange }) {
+  return (
+    <div className="version-tabs">
+      {projectVersions.map((version) => (
+        <button
+          className={activeVersion.id === version.id ? 'is-active' : ''}
+          key={version.id}
+          onClick={() => onChange(version)}
+        >
+          <span>{version.label}</span>
+          {version.project}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ProjectRow({ project, onOpenVersion }) {
+  return (
+    <button className="project-row" onClick={() => onOpenVersion(project.version)}>
+      <div>
+        <strong>{project.name}</strong>
+        <span>{project.client}</span>
       </div>
-      <div className="tech-stack">
-        {project.technologies.map((technology) => (
-          <span key={technology}>{technology}</span>
-        ))}
+      <small>{project.version.toUpperCase()}</small>
+      <ChevronRight size={16} />
+    </button>
+  );
+}
+
+function FlutterWorkspace({ activeVersion, setActiveVersion }) {
+  const setupSteps = ['flutter create app_name', 'add environments', 'build first feature'];
+
+  return (
+    <section className="workspace-grid">
+      <div className="main-card main-card--structure">
+        <div className="card-title">
+          <div>
+            <span>Flutter Architecture</span>
+            <h2>{activeVersion.label} project structure</h2>
+          </div>
+          <FolderTree size={24} />
+        </div>
+        <VersionTabs activeVersion={activeVersion} onChange={setActiveVersion} />
+        <div className="structure-preview">
+          <pre>
+            <code>{activeVersion.structure}</code>
+          </pre>
+        </div>
       </div>
-    </article>
+
+      <div className="main-card">
+        <div className="card-title">
+          <div>
+            <span>Layer Responsibility</span>
+            <h2>{activeVersion.project}</h2>
+          </div>
+          <Layers3 size={24} />
+        </div>
+        <p className="quiet">{activeVersion.purpose}</p>
+        <div className="setup-steps">
+          {setupSteps.map((step) => (
+            <span key={step}>{step}</span>
+          ))}
+        </div>
+        <LayerList layers={activeVersion.layers} />
+      </div>
+    </section>
+  );
+}
+
+function TechnologyWorkspace({ tech }) {
+  return (
+    <section className="workspace-grid">
+      <div className="main-card">
+        <div className="card-title">
+          <div>
+            <span>Technology Page</span>
+            <h2>{tech.name}</h2>
+          </div>
+          <Code2 size={24} />
+        </div>
+        <p className="quiet">{tech.summary}</p>
+        <div className="action-grid">
+          {tech.actions.map((action) => (
+            <button key={action}>
+              <Rocket size={16} />
+              {action}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="main-card">
+        <div className="card-title">
+          <div>
+            <span>Main Stack</span>
+            <h2>{tech.role}</h2>
+          </div>
+          <Boxes size={24} />
+        </div>
+        <div className="stack-list">
+          {tech.stack.map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
 export function App() {
+  const [activeTechId, setActiveTechId] = useState('flutter');
+  const [activeVersion, setActiveVersion] = useState(projectVersions[2]);
+
+  const activeTech = useMemo(
+    () => technologies.find((technology) => technology.id === activeTechId) || technologies[0],
+    [activeTechId]
+  );
+
+  const openProjectVersion = (versionId) => {
+    const version = projectVersions.find((item) => item.id === versionId);
+    setActiveTechId('flutter');
+    if (version) {
+      setActiveVersion(version);
+    }
+  };
+
   return (
-    <main>
-      <section className="hero">
-        <div className="hero__visual" aria-hidden="true">
-          <div className="phone-shell">
-            <div className="phone-top" />
-            <div className="phone-screen">
-              <div className="screen-header">
-                <span>CEO Dashboard</span>
-                <strong>94</strong>
-              </div>
-              <div className="score-ring">
-                <div>Health</div>
-                <strong>88%</strong>
-              </div>
-              <div className="mini-grid">
-                <span>Revenue</span>
-                <b>+18.2%</b>
-                <span>Alerts</span>
-                <b>3</b>
-                <span>Businesses</span>
-                <b>12</b>
-              </div>
-              <div className="app-bars">
-                <i />
-                <i />
-                <i />
-              </div>
-            </div>
+    <main className="dashboard-shell">
+      <aside className="side-nav">
+        <div className="brand">
+          <div>MC</div>
+          <span>Mobile Craft</span>
+        </div>
+        <nav>
+          {technologies.map((tech) => {
+            const Icon = icons[tech.id] || Code2;
+            return (
+              <button
+                className={activeTechId === tech.id ? 'is-active' : ''}
+                key={tech.id}
+                onClick={() => setActiveTechId(tech.id)}
+              >
+                <Icon size={18} />
+                {tech.name}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+
+      <section className="dashboard">
+        <header className="dashboard-header">
+          <div>
+            <span>Developer Dashboard</span>
+            <h1>Mobile stack dashboard.</h1>
           </div>
+          <div className="header-stats">
+            <MiniStat label="Structures" value="V1 / V2 / V3" />
+            <MiniStat label="Projects" value={completedProjects.length} />
+            <MiniStat label="Mode" value="Clean UI" />
+          </div>
+        </header>
+
+        <div className="tech-cloud" aria-label="Technology shortcuts">
+          {technologies.map((tech) => (
+            <TechButton
+              active={activeTechId === tech.id}
+              key={tech.id}
+              tech={tech}
+              onClick={() => setActiveTechId(tech.id)}
+            />
+          ))}
         </div>
 
-        <div className="hero__content">
-          <div className="eyebrow">
-            <Smartphone size={18} />
-            Mobile app developer architecture
-          </div>
-          <h1>Industry-grade Flutter project structure for a serious app.</h1>
-          <p>
-            A web guide shaped like a production mobile dashboard: clean architecture, feature modules, shared design system,
-            auth, dependency injection, routing, environments, and a complete Home feature boilerplate.
-          </p>
-          <div className="hero__actions">
-            <a href="#structure" className="button button--primary">
-              View structure
-              <ArrowRight size={18} />
-            </a>
-            <a href="#projects" className="button button--ghost">
-              Completed projects
-              <BriefcaseBusiness size={18} />
-            </a>
-            <a href="#boilerplate" className="button button--ghost">
-              See boilerplate
-              <TerminalSquare size={18} />
-            </a>
-          </div>
-          <div className="stats">
-            <Stat value="3" label="environments" />
-            <Stat value="6" label="feature modules" />
-            <Stat value="Clean" label="architecture" />
-          </div>
-        </div>
+        {activeTech.id === 'flutter' ? (
+          <FlutterWorkspace activeVersion={activeVersion} setActiveVersion={setActiveVersion} />
+        ) : (
+          <TechnologyWorkspace tech={activeTech} />
+        )}
       </section>
 
-      <section className="section" id="structure">
-        <div className="section__heading">
-          <span>Project Structure</span>
-          <h2>Everything has a job, and every boundary is clear.</h2>
-        </div>
-        <div className="structure-layout">
-          <div className="tree-panel">
-            <div className="window-dots">
-              <i />
-              <i />
-              <i />
-            </div>
-            <pre>
-              <code>{architectureTree}</code>
-            </pre>
-          </div>
-          <div className="module-grid">
-            {modules.map((module) => (
-              <ModuleCard key={module.name} module={module} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section section--projects" id="projects">
-        <div className="section__heading">
-          <span>Completed Projects</span>
-          <h2>Delivered mobile and web systems with dashboard-grade UI.</h2>
-        </div>
-        <div className="projects-dashboard">
-          <div className="dashboard-summary">
+      <aside className="project-panel">
+        <div className="panel-card">
+          <div className="card-title">
             <div>
-              <span>Total Projects</span>
-              <strong>{completedProjects.length}</strong>
+              <span>Completed Projects</span>
+              <h2>Open version</h2>
             </div>
-            <div>
-              <span>Main Stack</span>
-              <strong>Flutter / React</strong>
-            </div>
-            <div>
-              <span>Delivery</span>
-              <strong>Responsive UI</strong>
-            </div>
+            <Database size={22} />
           </div>
-          <div className="project-grid">
+          <div className="project-list">
             {completedProjects.map((project) => (
-              <ProjectCard project={project} key={project.name} />
+              <ProjectRow key={project.name} project={project} onOpenVersion={openProjectVersion} />
             ))}
           </div>
         </div>
-      </section>
 
-      <section className="section section--split">
-        <div className="section__heading">
-          <span>Layering</span>
-          <h2>Feature-first, clean inside each feature.</h2>
+        <div className="panel-card panel-card--guide">
+          <ShieldCheck size={24} />
+          <h3>Current standard is V3</h3>
+          <p>
+            Use V3 for new apps. V1 fits early service apps, V2 fits POS/offline systems, and V3 fits complex production
+            products.
+          </p>
         </div>
-        <div className="layers">
-          {featureLayers.map((layer) => (
-            <LayerRow key={layer.title} layer={layer} />
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section__heading">
-          <span>Architecture Notes</span>
-          <h2>Production decisions that save the project later.</h2>
-        </div>
-        <div className="highlight-grid">
-          {highlights.map((item) => (
-            <article className="highlight" key={item.title}>
-              <Layers3 size={22} />
-              <h3>{item.title}</h3>
-              <p>{item.copy}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section" id="boilerplate">
-        <div className="section__heading">
-          <span>Home Feature Boilerplate</span>
-          <h2>Bloc, repository, usecase, entity, model, and remote source.</h2>
-        </div>
-        <div className="code-grid">
-          {boilerplateFiles.map((file) => (
-            <FileBlock file={file} key={file.path} />
-          ))}
-        </div>
-      </section>
+      </aside>
     </main>
   );
 }

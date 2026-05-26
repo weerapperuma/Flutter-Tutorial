@@ -1,309 +1,224 @@
-export const architectureTree = `lib/
-├── main.dart
-├── main_dev.dart
-├── main_staging.dart
-├── main_prod.dart
-│
-├── app/
-│   ├── app.dart
-│   ├── router/
-│   │   ├── app_router.dart
-│   │   └── app_routes.dart
-│   ├── theme/
-│   │   ├── app_theme.dart
-│   │   ├── app_colors.dart
-│   │   └── app_text_styles.dart
-│   └── di/
-│       ├── injection.dart
-│       └── injection.config.dart
-│
-├── core/
-│   ├── network/
-│   │   ├── api_client.dart
-│   │   ├── auth_interceptor.dart
-│   │   └── error_interceptor.dart
-│   ├── storage/
-│   │   ├── secure_storage.dart
-│   │   └── local_storage.dart
-│   ├── error/
-│   │   ├── failures.dart
-│   │   └── exceptions.dart
-│   ├── utils/
-│   │   ├── date_utils.dart
-│   │   └── number_formatter.dart
-│   └── constants/
-│       ├── api_constants.dart
-│       └── app_constants.dart
-│
-├── shared/
-│   ├── widgets/
-│   │   ├── health_score_ring.dart
-│   │   ├── stat_card.dart
-│   │   ├── alert_badge.dart
-│   │   ├── kpi_progress_bar.dart
-│   │   ├── business_card.dart
-│   │   ├── section_header.dart
-│   │   └── loading_shimmer.dart
-│   └── models/
-│       ├── business.dart
-│       └── health_score.dart
-│
-└── features/
-    ├── auth/
-    ├── home/
-    ├── analytics/
-    ├── operations/
-    ├── alerts/
-    ├── ai/
-    └── profile/`;
-
-export const modules = [
+export const technologies = [
   {
-    key: 'app',
-    name: 'App Shell',
-    description: 'Bootstraps router, theme, dependency injection, and app-wide state.',
-    items: ['MaterialApp', 'GoRouter', 'ThemeData']
+    id: 'flutter',
+    name: 'Flutter',
+    role: 'Mobile app architecture',
+    summary: 'Project creation flow, reusable folder structures, clean layers, Bloc/Cubit boundaries, and production-ready app setup.',
+    stack: ['Dart', 'Flutter', 'Bloc', 'Dio', 'GetIt', 'GoRouter'],
+    actions: ['Create project', 'Select structure', 'Build feature', 'Connect API']
   },
   {
-    key: 'network',
-    name: 'Core Network',
-    description: 'Owns Dio setup, JWT attachment, token refresh, and API error normalization.',
-    items: ['Dio client', 'Interceptors', 'Failure mapping']
+    id: 'kotlin',
+    name: 'Kotlin',
+    role: 'Native Android modules',
+    summary: 'Used for native Android integrations, platform channels, background services, POS devices, and hardware-level support.',
+    stack: ['Kotlin', 'Android SDK', 'Room', 'Coroutines'],
+    actions: ['Platform channel', 'Device API', 'Background task']
   },
   {
-    key: 'shared',
-    name: 'Design System',
-    description: 'Reusable UI primitives that keep every feature visually consistent.',
-    items: ['Score ring', 'Stat cards', 'Alert badges']
+    id: 'express',
+    name: 'Express',
+    role: 'Backend API layer',
+    summary: 'REST APIs for auth, inventory, reports, mobile sync, dashboard metrics, and admin-side integrations.',
+    stack: ['Node.js', 'Express', 'JWT', 'MySQL'],
+    actions: ['Auth API', 'Reports API', 'Sync API']
   },
   {
-    key: 'auth',
-    name: 'Auth Feature',
-    description: 'Login, biometrics, session state, tenant switching, and refresh token flow.',
-    items: ['Bloc state', 'Secure token', 'Biometric prompt']
+    id: 'react',
+    name: 'React',
+    role: 'Admin dashboards',
+    summary: 'Clean responsive dashboard UI for project management, reporting screens, analytics, and internal tools.',
+    stack: ['React', 'Vite', 'Charts', 'REST API'],
+    actions: ['Dashboard UI', 'Reusable cards', 'Data tables']
   },
   {
-    key: 'home',
-    name: 'Home Feature',
-    description: 'Business summaries, AI digest, and CEO-ready KPI overview.',
-    items: ['Usecases', 'Repository', 'Remote data source']
-  },
-  {
-    key: 'operations',
-    name: 'Operations',
-    description: 'Live operational views for pumps, riders, alerts, and business health.',
-    items: ['Live status', 'Maps-ready data', 'Alert stream']
+    id: 'next',
+    name: 'Next.js',
+    role: 'Production web apps',
+    summary: 'Full web products with routing, server rendering, API routes, auth pages, and SEO-ready public screens.',
+    stack: ['Next.js', 'React', 'API Routes', 'Tailwind'],
+    actions: ['App router', 'SSR pages', 'Admin portal']
   }
 ];
 
-export const featureLayers = [
+export const projectVersions = [
   {
-    badge: '01',
-    title: 'Presentation',
-    copy: 'Pages, widgets, Bloc/Cubit, events, and states. This layer talks in UI language and asks usecases for work.'
+    id: 'v1',
+    label: 'V1',
+    project: 'MotoCare',
+    client: 'MotoCare-LK-Pro-Mobile',
+    purpose: 'Simple feature-first app for service workflows. Good when the app is growing but still easy to understand.',
+    structure: `lib/
+|-- main.dart
+|-- core/
+|   |-- constants/
+|   |-- di/
+|   |-- error/
+|   |-- extensions/
+|   |-- network/
+|   |-- routing/
+|   |-- storage/
+|   |-- sync/
+|   |-- themes/
+|   |-- ui/
+|   |-- widgets/
+|   \`-- dio_base_options.dart
+\`-- features/
+    |-- auth/
+    |-- dashboard/
+    |   |-- data_layer/
+    |   |-- domain_layer/
+    |   \`-- presentation_layer/
+    |-- live_tv/
+    |-- mechanic_terminal/
+    |-- quotation/
+    \`-- reservations/
+        |-- data_layer/
+        |   \`-- data_source/
+        |-- domain_layer/
+        \`-- presentation_layer/`,
+    layers: [
+      ['core', 'Shared technical foundation: constants, dependency injection, routing, Dio setup, storage, sync, themes, and global widgets.'],
+      ['features', 'Business modules grouped by app capability such as dashboard, quotation, reservations, and mechanic terminal.'],
+      ['data_layer', 'API calls, local cache, DTO models, and mappers for each feature.'],
+      ['domain_layer', 'Business rules, entities, repository contracts, and usecases.'],
+      ['presentation_layer', 'Pages, widgets, Bloc/Cubit, states, and user interactions.']
+    ]
   },
   {
-    badge: '02',
-    title: 'Domain',
-    copy: 'Entities, repository contracts, and usecases. Pure Dart. No JSON annotations, no HTTP client, no Flutter widgets.'
+    id: 'v2',
+    label: 'V2',
+    project: 'Point of Sale',
+    client: 'POS by HAT',
+    purpose: 'Cleaner business separation for POS systems where receipts, payments, products, and reconciliation need stable boundaries.',
+    structure: `lib/
+|-- main.dart
+|-- core/
+|   |-- bloc/
+|   |-- config/
+|   |-- constants/
+|   |-- local_db/
+|   |-- services/
+|   |-- sync/
+|   |-- theme/
+|   |-- utils/
+|   \`-- widgets/
+\`-- features/
+    |-- auth/
+    |   |-- domain/
+    |   |   \`-- entities/
+    |   \`-- presentation/
+    |       |-- cubit/
+    |       \`-- pages/
+    |-- branch/
+    |-- customers/
+    |-- payments/
+    |-- products/
+    |-- receipts/
+    |   |-- data/
+    |   |-- domain/
+    |   \`-- presentation/
+    \`-- reconciliation/`,
+    layers: [
+      ['core/bloc', 'Global app state such as auth session, sync status, branch context, and shared loading/error states.'],
+      ['core/local_db', 'Offline-first POS storage for receipts, products, payments, and pending sync queues.'],
+      ['feature/domain', 'Pure POS rules: entities, totals, discounts, taxes, receipt validation, and repository contracts.'],
+      ['feature/data', 'Database tables, API models, local/remote sources, and sync mapping.'],
+      ['feature/presentation', 'Cashier pages, Cubit/Bloc state, dialogs, receipt UI, and payment flows.']
+    ]
   },
   {
-    badge: '03',
-    title: 'Data',
-    copy: 'Remote/local data sources, DTO models, repository implementations, and mapping from API shape to domain shape.'
-  }
-];
-
-export const highlights = [
-  {
-    title: 'Environment Entry Points',
-    copy: 'Use main_dev.dart, main_staging.dart, and main_prod.dart so API URLs, logging, and feature flags never get hardcoded.'
-  },
-  {
-    title: 'Auth Is A Feature',
-    copy: 'CEO login, biometrics, refresh tokens, and tenant session rules are business behavior, not utility code.'
-  },
-  {
-    title: 'Shared Widgets Stay Shared',
-    copy: 'Health rings, KPI cards, alert pills, and business cards belong in shared/widgets so features do not import sideways.'
-  },
-  {
-    title: 'Domain Stays Pure',
-    copy: 'Business logic depends on repository contracts and entities. API changes stay contained in data models and mappers.'
+    id: 'v3',
+    label: 'V3',
+    project: 'Current Standard',
+    client: 'New Flutter Apps',
+    purpose: 'Industry-grade clean architecture for complex apps with environments, shared design system, auth, analytics, AI, alerts, and operations.',
+    structure: `lib/
+|-- main.dart
+|-- main_dev.dart
+|-- main_staging.dart
+|-- main_prod.dart
+|-- app/
+|   |-- app.dart
+|   |-- router/
+|   |   |-- app_router.dart
+|   |   \`-- app_routes.dart
+|   |-- theme/
+|   |   |-- app_theme.dart
+|   |   |-- app_colors.dart
+|   |   \`-- app_text_styles.dart
+|   \`-- di/
+|       |-- injection.dart
+|       \`-- injection.config.dart
+|-- core/
+|   |-- network/
+|   |   |-- api_client.dart
+|   |   |-- auth_interceptor.dart
+|   |   \`-- error_interceptor.dart
+|   |-- storage/
+|   |   |-- secure_storage.dart
+|   |   \`-- local_storage.dart
+|   |-- error/
+|   |   |-- failures.dart
+|   |   \`-- exceptions.dart
+|   |-- utils/
+|   \`-- constants/
+|-- shared/
+|   |-- widgets/
+|   \`-- models/
+\`-- features/
+    |-- auth/
+    |   |-- data/
+    |   |-- domain/
+    |   \`-- presentation/
+    |-- home/
+    |   |-- data/
+    |   |-- domain/
+    |   \`-- presentation/
+    |-- analytics/
+    |-- operations/
+    |-- alerts/
+    |-- ai/
+    \`-- profile/`,
+    layers: [
+      ['main_*', 'Environment bootstrap for dev, staging, and production with different API URLs and feature flags.'],
+      ['app', 'App shell: MaterialApp, router, theme tokens, route constants, and dependency injection setup.'],
+      ['core', 'Reusable technical services: network, storage, error handling, constants, utilities, and interceptors.'],
+      ['shared', 'Design system and shared models used across many features. No business-specific page logic.'],
+      ['features/*/domain', 'Pure Dart entities, repository contracts, and usecases. No JSON, no widgets, no Dio.'],
+      ['features/*/data', 'Remote/local data sources, DTO models, repository implementations, and API-to-domain mapping.'],
+      ['features/*/presentation', 'Pages, feature widgets, Bloc/Cubit, events, states, and screen-specific interactions.']
+    ]
   }
 ];
 
 export const completedProjects = [
   {
+    name: 'MotoCare',
+    client: 'MotoCare-LK-Pro-Mobile',
+    version: 'v1',
+    stack: ['Flutter', 'Dio', 'Bloc'],
+    status: 'Completed'
+  },
+  {
+    name: 'Point of Sale',
+    client: 'POS by HAT',
+    version: 'v2',
+    stack: ['Flutter', 'Local DB', 'Sync'],
+    status: 'Completed'
+  },
+  {
     name: 'Salesman Pro',
     client: 'Tharindu Farms',
-    status: 'Completed',
-    summary: 'Field sales mobile app with customer routes, order capture, invoice summaries, and manager-ready daily reports.',
-    metrics: [
-      { label: 'Platform', value: 'Mobile' },
-      { label: 'Modules', value: '8' },
-      { label: 'UI', value: 'Dashboard' }
-    ],
-    technologies: ['Flutter', 'Kotlin', 'Firebase', 'REST API']
+    version: 'v2',
+    stack: ['Flutter', 'Kotlin', 'Firebase'],
+    status: 'Completed'
   },
   {
     name: 'Service Station Management System',
     client: 'Auto Service Operations',
-    status: 'Completed',
-    summary: 'Responsive admin dashboard for jobs, vehicle service history, billing, inventory, technicians, and daily revenue.',
-    metrics: [
-      { label: 'Platform', value: 'Web' },
-      { label: 'Modules', value: '10' },
-      { label: 'Reports', value: 'Live' }
-    ],
-    technologies: ['Next.js', 'React', 'Node.js', 'MySQL']
-  },
-  {
-    name: 'Business Health Dashboard',
-    client: 'Multi Business CEO View',
-    status: 'Completed',
-    summary: 'Executive KPI dashboard with health score, alerts, revenue snapshots, AI digest, and branch-level performance.',
-    metrics: [
-      { label: 'Platform', value: 'Web + App' },
-      { label: 'Score', value: '0-100' },
-      { label: 'Alerts', value: 'Smart' }
-    ],
-    technologies: ['Flutter', 'React', 'Next.js', 'Dio']
-  }
-];
-
-export const boilerplateFiles = [
-  {
-    path: 'features/home/domain/entities/business_summary.dart',
-    code: `class BusinessSummary {
-  const BusinessSummary({
-    required this.id,
-    required this.name,
-    required this.revenue,
-    required this.healthScore,
-    required this.openAlerts,
-  });
-
-  final String id;
-  final String name;
-  final double revenue;
-  final int healthScore;
-  final int openAlerts;
-}`
-  },
-  {
-    path: 'features/home/domain/repositories/home_repository.dart',
-    code: `import '../entities/business_summary.dart';
-
-abstract class HomeRepository {
-  Future<List<BusinessSummary>> getAllBusinesses();
-  Future<String> getAiDigest();
-}`
-  },
-  {
-    path: 'features/home/domain/usecases/get_all_businesses.dart',
-    code: `import '../entities/business_summary.dart';
-import '../repositories/home_repository.dart';
-
-class GetAllBusinesses {
-  const GetAllBusinesses(this.repository);
-
-  final HomeRepository repository;
-
-  Future<List<BusinessSummary>> call() {
-    return repository.getAllBusinesses();
-  }
-}`
-  },
-  {
-    path: 'features/home/data/models/business_summary_model.dart',
-    code: `import '../../domain/entities/business_summary.dart';
-
-class BusinessSummaryModel extends BusinessSummary {
-  const BusinessSummaryModel({
-    required super.id,
-    required super.name,
-    required super.revenue,
-    required super.healthScore,
-    required super.openAlerts,
-  });
-
-  factory BusinessSummaryModel.fromJson(Map<String, dynamic> json) {
-    return BusinessSummaryModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      revenue: (json['revenue'] as num).toDouble(),
-      healthScore: json['health_score'] as int,
-      openAlerts: json['open_alerts'] as int,
-    );
-  }
-}`
-  },
-  {
-    path: 'features/home/data/datasources/home_remote_ds.dart',
-    code: `import '../../../../core/network/api_client.dart';
-import '../models/business_summary_model.dart';
-
-class HomeRemoteDataSource {
-  const HomeRemoteDataSource(this.apiClient);
-
-  final ApiClient apiClient;
-
-  Future<List<BusinessSummaryModel>> getAllBusinesses() async {
-    final response = await apiClient.get('/businesses/summary');
-    final data = response.data as List<dynamic>;
-
-    return data
-        .map((item) => BusinessSummaryModel.fromJson(item))
-        .toList();
-  }
-}`
-  },
-  {
-    path: 'features/home/data/repositories/home_repo_impl.dart',
-    code: `import '../../domain/entities/business_summary.dart';
-import '../../domain/repositories/home_repository.dart';
-import '../datasources/home_remote_ds.dart';
-
-class HomeRepositoryImpl implements HomeRepository {
-  const HomeRepositoryImpl(this.remoteDataSource);
-
-  final HomeRemoteDataSource remoteDataSource;
-
-  @override
-  Future<List<BusinessSummary>> getAllBusinesses() {
-    return remoteDataSource.getAllBusinesses();
-  }
-
-  @override
-  Future<String> getAiDigest() async {
-    return 'Revenue is trending up while alerts need review.';
-  }
-}`
-  },
-  {
-    path: 'features/home/presentation/bloc/home_bloc.dart',
-    code: `import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/get_all_businesses.dart';
-
-part 'home_event.dart';
-part 'home_state.dart';
-
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc(this.getAllBusinesses) : super(const HomeInitial()) {
-    on<HomeStarted>(_onStarted);
-  }
-
-  final GetAllBusinesses getAllBusinesses;
-
-  Future<void> _onStarted(
-    HomeStarted event,
-    Emitter<HomeState> emit,
-  ) async {
-    emit(const HomeLoading());
-    final businesses = await getAllBusinesses();
-    emit(HomeLoaded(businesses));
-  }
-}`
+    version: 'web',
+    stack: ['React', 'Next.js', 'Express'],
+    status: 'Completed'
   }
 ];
