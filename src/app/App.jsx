@@ -42,8 +42,8 @@ function TechOrb({ tech, active, onClick }) {
 
 function DashboardHome({ onSelectTech, selectedTech }) {
   return (
-    <main className="h-dvh overflow-hidden bg-[#edf3ef] p-4 text-slate-950">
-      <section className="grid h-full grid-cols-[220px_minmax(0,1fr)_260px] gap-4 max-[1050px]:grid-cols-[88px_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:overflow-auto">
+    <main className="min-h-dvh overflow-x-hidden bg-[#edf3ef] p-4 text-slate-950">
+      <section className="grid min-h-0 grid-cols-[220px_minmax(0,1fr)_260px] items-start gap-4 max-[1050px]:grid-cols-[88px_minmax(0,1fr)] max-[760px]:grid-cols-1">
         <aside className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm max-[760px]:flex max-[760px]:items-center max-[760px]:gap-4">
           <div className="mb-5 flex items-center gap-3 border-b border-slate-100 pb-4 max-[760px]:mb-0 max-[760px]:border-b-0 max-[760px]:pb-0">
             <div className="grid size-10 place-items-center rounded-xl bg-emerald-700 font-black text-white">MC</div>
@@ -68,22 +68,22 @@ function DashboardHome({ onSelectTech, selectedTech }) {
           </nav>
         </aside>
 
-        <section className="grid min-h-0 grid-rows-[96px_1fr] gap-4 max-[760px]:grid-rows-none">
-          <header className="grid grid-cols-[minmax(0,1fr)_320px] items-center gap-4 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm max-[900px]:grid-cols-1">
+        <section className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-4 max-[760px]:grid-rows-none">
+          <header className="grid grid-cols-[minmax(0,1fr)_320px] items-center gap-4 rounded-2xl border border-slate-200 bg-white/80 p-3 shadow-sm max-[1180px]:grid-cols-1">
             <div>
               <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Developer Dashboard</span>
-              <h1 className="mt-1 text-3xl font-black leading-none tracking-normal max-[760px]:text-3xl">
+              <h1 className="mt-1 text-2xl font-black leading-tight tracking-normal max-[760px]:text-3xl">
                 Stack launcher for real project architecture.
               </h1>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 max-[520px]:grid-cols-1">
               <Stat label="Stacks" value={technologies.length} />
               <Stat label="Projects" value={completedProjects.length} />
               <Stat label="Flutter" value="V1-V3" />
             </div>
           </header>
 
-          <div className="relative min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm max-[760px]:min-h-[560px]">
+          <div className="relative min-h-[470px] overflow-hidden rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm max-[760px]:overflow-visible">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.05)_1px,transparent_1px)] bg-[size:72px_72px]" />
             {technologies.map((tech) => (
               <TechOrb
@@ -93,7 +93,7 @@ function DashboardHome({ onSelectTech, selectedTech }) {
                 onClick={() => onSelectTech(tech.id)}
               />
             ))}
-            <div className="relative z-10 grid h-full grid-cols-[minmax(240px,0.65fr)_minmax(0,1.35fr)] gap-4 pt-20 max-[900px]:grid-cols-1">
+            <div className="relative z-10 grid min-h-[430px] grid-cols-[minmax(240px,0.65fr)_minmax(0,1.35fr)] gap-4 pt-20 max-[900px]:grid-cols-1 max-[760px]:pt-4">
               <div className="rounded-2xl border border-slate-200 bg-white/90 p-7 shadow-sm">
                 <span className="text-xs font-black uppercase tracking-wider text-emerald-700">Start Here</span>
                 <h2 className="mt-3 text-4xl font-black leading-none tracking-normal max-[760px]:text-4xl">
@@ -105,7 +105,7 @@ function DashboardHome({ onSelectTech, selectedTech }) {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 max-[620px]:grid-cols-1">
+              <div className="grid grid-cols-3 gap-3 max-[1180px]:grid-cols-2 max-[620px]:grid-cols-1">
                 {technologies.map((tech) => {
                   const Icon = icons[tech.id] || Code2;
                   return (
@@ -114,11 +114,11 @@ function DashboardHome({ onSelectTech, selectedTech }) {
                       key={tech.id}
                       onClick={() => onSelectTech(tech.id)}
                     >
-                      <Icon className="mb-5 text-emerald-700 group-hover:text-white" size={24} />
+                      <Icon className="mb-4 text-emerald-700 group-hover:text-white" size={22} />
                       <span className="text-xs font-black uppercase tracking-wider text-emerald-700 group-hover:text-white">
                         {tech.name}
                       </span>
-                      <strong className="mt-2 block text-base">{tech.role}</strong>
+                      <strong className="mt-2 block text-sm leading-snug">{tech.role}</strong>
                     </button>
                   );
                 })}
@@ -127,7 +127,7 @@ function DashboardHome({ onSelectTech, selectedTech }) {
           </div>
         </section>
 
-        <aside className="grid gap-4 max-[1050px]:col-span-2 max-[760px]:col-span-1">
+        <aside className="grid content-start gap-4 max-[1050px]:col-span-2 max-[760px]:col-span-1">
           <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
@@ -169,9 +169,9 @@ function DashboardHome({ onSelectTech, selectedTech }) {
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3">
+    <div className="rounded-xl border border-slate-200 bg-white p-2.5">
       <span className="text-xs font-black uppercase tracking-wider text-emerald-700">{label}</span>
-      <strong className="mt-1 block text-lg font-black">{value}</strong>
+      <strong className="mt-1 block text-base font-black">{value}</strong>
     </div>
   );
 }
